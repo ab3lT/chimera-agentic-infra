@@ -1,0 +1,21 @@
+# Project Chimera - Cursor Rules
+
+## Context
+This is Project Chimera, an autonomous AI influencer system using:
+- FastRender Swarm Architecture (Planner-Worker-Judge)
+- Model Context Protocol (MCP) for external interactions
+- Coinbase AgentKit for financial transactions
+
+## Rules
+
+1. Always check specs/ before generating implementation code
+2. Follow TDD: write failing tests first
+3. Use Pydantic v2 for all data models
+4. All external calls must go through MCP Tools
+5. Type hints are mandatory
+6. Async-first patterns preferred
+
+## File References
+- specs/_meta.md: Vision and constraints
+- specs/functional.md: User stories
+- specs/technical.md: API contracts
