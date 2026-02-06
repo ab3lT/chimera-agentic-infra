@@ -6,7 +6,6 @@ Tests should FAIL until implementation is complete.
 """
 
 import pytest
-from datetime import datetime
 
 # These imports will fail until we implement the modules
 # from src.perception.trend_fetcher import TrendFetcher, TrendData

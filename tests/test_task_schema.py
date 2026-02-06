@@ -19,7 +19,8 @@ class TestAgentTaskSchema:
         pytest.skip("AgentTask schema not yet implemented - TDD placeholder")
 
     def test_task_type_enum_values(self):
-        """task_type must be one of: generate_content, reply_comment, execute_transaction, analyze_trend"""
+        """task_type must be one of the valid enum values"""
+        # Valid values: generate_content, reply_comment, execute_transaction, analyze_trend
         pytest.skip("AgentTask schema not yet implemented - TDD placeholder")
 
     def test_priority_enum_values(self):
