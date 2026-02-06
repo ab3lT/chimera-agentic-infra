@@ -1,0 +1,15 @@
+# Project Chimera - Code Owners
+# These owners will be requested for review on PRs
+
+# Default owner for everything
+* @abeltadesse
+
+# Specs require careful review
+/specs/ @abeltadesse
+
+# Skills contracts
+/skills/ @abeltadesse
+
+# Infrastructure changes
+/Dockerfile @abeltadesse
+/.github/workflows/ @abeltadesse

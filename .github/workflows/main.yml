@@ -1,0 +1,101 @@
+# Project Chimera - CI/CD Pipeline
+# Runs on every push and pull request
+
+name: Chimera CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: '3.11'
+
+jobs:
+  # Lint and type check
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff mypy
+
+      - name: Run Ruff linter
+        run: ruff check src/ tests/ skills/ --output-format=github
+
+      - name: Run MyPy type checker
+        run: mypy src/ --ignore-missing-imports || true
+
+  # Run tests
+  test:
+    name: Test Suite
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]" || pip install pytest pytest-asyncio
+
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: pytest-results.xml
+
+  # Docker build test
+  docker:
+    name: Docker Build
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t chimera-agent:${{ github.sha }} --target development .
+
+      - name: Run tests in Docker
+        run: docker run --rm chimera-agent:${{ github.sha }} pytest tests/ -v --tb=short
+
+  # Spec validation
+  spec-check:
+    name: Spec Validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Verify specs exist
+        run: |
+          echo "Checking required spec files..."
+          test -f specs/_meta.md && echo "✓ _meta.md exists"
+          test -f specs/functional.md && echo "✓ functional.md exists"
+          test -f specs/technical.md && echo "✓ technical.md exists"
+          test -f specs/openclaw_integration.md && echo "✓ openclaw_integration.md exists"
+
+      - name: Verify skills contracts
+        run: |
+          echo "Checking skill contracts..."
+          test -f skills/skill_download_video/README.md && echo "✓ skill_download_video contract"
+          test -f skills/skill_transcribe_audio/README.md && echo "✓ skill_transcribe_audio contract"
+          test -f skills/skill_generate_content/README.md && echo "✓ skill_generate_content contract"
