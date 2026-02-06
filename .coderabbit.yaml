@@ -1,0 +1,53 @@
+# CodeRabbit AI Review Configuration
+# Instructs the AI reviewer to check for spec alignment
+
+language: en
+
+reviews:
+  request_changes_workflow: true
+  high_level_summary: true
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+
+instructions: |
+  ## Project Chimera Review Guidelines
+
+  This is an autonomous AI influencer project using Swarm Architecture.
+
+  ### Critical Checks
+
+  1. **Spec Alignment**
+     - All code must align with specs/ directory
+     - Check specs/technical.md for API contracts
+     - Verify schemas match JSON definitions
+
+  2. **Security**
+     - Flag any hardcoded credentials or API keys
+     - Ensure secrets use environment variables
+     - Check for proper input validation
+
+  3. **Architecture Compliance**
+     - External calls must go through MCP layer
+     - No direct API calls from core logic
+     - Workers must be stateless
+
+  4. **Code Quality**
+     - Type hints required on all functions
+     - Pydantic models for data validation
+     - Async patterns for I/O operations
+
+  ### Files to Pay Extra Attention
+
+  - `src/` - Core implementation
+  - `skills/` - Skill implementations must match README contracts
+  - `tests/` - Tests should follow TDD principles
+
+auto_review:
+  enabled: true
+  ignore_title_keywords:
+    - "WIP"
+    - "DO NOT MERGE"
+
+chat:
+  auto_reply: true
