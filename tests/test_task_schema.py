@@ -50,4 +50,3 @@ class TestTaskResultSchema:
     def test_artifact_optional_but_structured(self):
         """artifact is optional but must have content_type and content if present"""
         pytest.skip("TaskResult schema not yet implemented - TDD placeholder")
-        

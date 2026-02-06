@@ -70,4 +70,3 @@ class TestTrendFetcher:
     def test_fetcher_sorts_by_relevance_descending(self):
         """Results should be sorted by relevance_score descending"""
         pytest.skip("TrendFetcher not yet implemented - TDD placeholder")
-        
