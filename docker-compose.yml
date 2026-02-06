@@ -1,0 +1,44 @@
+# Project Chimera - Docker Compose
+# Development environment with supporting services
+
+version: '3.8'
+
+services:
+  # Main application (for testing)
+  chimera:
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/app
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - WEAVIATE_URL=http://weaviate:8080
+    depends_on:
+      - redis
+      - weaviate
+    command: pytest tests/ -v
+
+  # Redis for task queue and short-term memory
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+  # Weaviate for vector storage (long-term memory)
+  weaviate:
+    image: semitechnologies/weaviate:1.24.1
+    ports:
+      - "8080:8080"
+    environment:
+      - QUERY_DEFAULTS_LIMIT=25
+      - AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED=true
+      - PERSISTENCE_DATA_PATH=/var/lib/weaviate
+    volumes:
+      - weaviate_data:/var/lib/weaviate
+
+volumes:
+  redis_data:
+  weaviate_data:
